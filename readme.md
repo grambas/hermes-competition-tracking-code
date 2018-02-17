@@ -12,11 +12,37 @@ Most of my project work is based on that problem. I tried to find the most effic
 lossy compress this information in tracking code.
 
 
-
-1.Project structure for most important files
+0. Instalation shipment and deployment
+1. Project structure for most important files
 2. Dependency and  Technologies
 3. Tracing Code Functionality
 4. Persistent and Database
+
+
+#########################################################################################
+#																						#
+#  					0. Instalation shipment and deployment               				#
+#																						#
+#########################################################################################
+
+Clone project
+```
+git clone git@github.com:grambas/hermes-competition.git
+```
+Enter to project root folder and then start docker with command
+```
+docker-composer up -d
+```
+Junst in cacha clear the cache and assign right permissions
+```
+docker-compose exec php php artisan cache:clear
+docker-compose exec php chmod -R 777 vendor storage
+```
+Migrate and seed database
+```
+docker-compose exec php php artisan migrate --seed
+```
+
 
 
 #########################################################################################
@@ -34,7 +60,7 @@ competition
 |	 |
 |	 |___Library
 |	 |	    |___Hermes.php 		- Main class for compressing, reversing tracking code
-|			|___Coordinate.php 	- Simple coordinate class adjusted only for this project 
+|			|___Coordinate.php 	- Simple coordinate class adjusted only for this project
 |	 | 
 |	 |___Parcel.php 			- Database tables binding (Parcel,Status,Type)
 |	 |___Status.php
@@ -42,7 +68,7 @@ competition
 |
 |___database
 |		|
-|		|___migrations    		-   Automatically  generates tables for project							
+|		|___migrations    		-   Automatically  generates tables for project
 |		|		|
 |		|		|___2018_02_12_1_create_parcels_table.php
 |		|		|___2018_02_12_2_create_statuses_table.php
@@ -85,15 +111,15 @@ competition
 #																						#
 #########################################################################################
 
-Backend
-	PHP Laravel Framework (PHP 7, nginx PHP-FPM)
-	Mysql Database
-	PHPUnit test tool
+* Backend
+  *  PHP Laravel Framework (PHP 7, nginx PHP-FPM)
+  *  Mysql Database
+  *  PHPUnit test tool
 
 
-Frontend
-	Javsacript JQuery
-	HTML bootstrap 4 framework
+* Frontend
+  *  Javsacript JQuery
+  *  HTML bootstrap 4 framework
 
 
 #########################################################################################
@@ -115,10 +141,11 @@ Compression length statistic
 ============================
 
 
-### Without compression (CONSTANT): 
+### Without compression (CONSTANT)
 
+```
 18 = 2*9 = Sender coordinates (latitude/longitude) xx.xxxxxx,xx.xxxxxx, (6decimal precision +dot)
-+						
++
 18		 = Same for receiver
 +
 10       = Timestamp
@@ -126,11 +153,13 @@ Compression length statistic
 2 		 = Parcel types (~20 types)
 =
 48 charts to save information
+```
 
 ### With Compression (WORST CASE):
 
+```
 14 = 2*7 = Sender coordinates (latitude/longitude) x.xxxxxx,x.xxxxxx, (6decimal precision)
-+						
++
 14		 = Same for receiver
 +
 8       = Timestamp
@@ -138,12 +167,13 @@ Compression length statistic
 1 		 =Parcel types (~20 types)
 =
 37 chars to save information
-
+```
 
 ### With Compression (BEST CASE):
 
+```
 8 = 2*4 = Sender coordinates (latitude/longitude) x.xxx,x.xxx, (6decimal precision)
-+						
++
 8		 = Same for receiver
 +
 4       = Timestamp
@@ -151,7 +181,7 @@ Compression length statistic
 1 		 =Parcel types (~20 types)
 =
 21 chars to save information
-
+```
 
 ### Compression rate
 
@@ -316,23 +346,23 @@ given modified timestamp
   *  3 years (then defined timestamp must be renewed or 1 digit to tracking code added)
 
 
-###################################################################################################
-#																								  #	
-#  								1. Persistent and Database										  #
-#																						          #
-###################################################################################################
+###############################################################################################
+#																							  #
+#  								1. Persistent and Database									  #
+#																						      #
+###############################################################################################
 
 Main part of structure:
 ```					
-┌─────────────────────────────┐1..*    0..1┌────────────────────┐1..*     0..1┌─────────────────┐      
+┌─────────────────────────────┐1..*    0..1┌────────────────────┐1..*     0..1┌─────────────────┐
 │   parcels                   │───────────>│ parcel_status      │────────────>│      status     │
-│─────────────────────────────│	           │────────────────────│			  │─────────────────│
-│PK     ID                    │            │FK  parcel_id	    │             │PK  ID           │
+│─────────────────────────────│	           │────────────────────│             │─────────────────│
+│PK     ID                    │            │FK  parcel_id       │             │PK  ID           │
 │INDEX  tracking: VARCHAR 37  │            │FK  status_id       │             │    desc:VARCHAR │
-│.							  │			   │	createt_at		│             │    located:INT1 │
+│.                            │            │    createt_at      │             │    located:INT1 │
 │.                            │            │    location:VARCHAR│             │                 │
 │.                            │            │                    │             │                 │
-└─────────────────────────────┘ 	       └────────────────────┘             └─────────────────┘
+└─────────────────────────────┘            └────────────────────┘             └─────────────────┘
 ```
 
 Status Location explain
