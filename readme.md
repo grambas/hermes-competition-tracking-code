@@ -1,7 +1,7 @@
 #########################################################################################
-#																						#
-#  						Introduction													#
-#																						#
+#			                               					#
+#  		                        Introduction	         			#
+#											#
 #########################################################################################
 
 
@@ -20,35 +20,34 @@ lossy compress this information in tracking code.
 
 
 #########################################################################################
-#																						#
-#  					0. Instalation shipment and deployment               				#
-#																						#
+#								                        #
+#  	                0. Instalation shipment and deployment 				#
+#                                                                                       #
 #########################################################################################
 
-Clone project
+1. Clone project
 ```
 git clone git@github.com:grambas/hermes-competition.git
 ```
-Enter to project root folder and then start docker with command
+2. Enter to project root folder and then start docker with command
 ```
 docker-composer up -d
 ```
-Junst in cacha clear the cache and assign right permissions
+2. Junst in cacha clear the cache and assign right permissions
 ```
 docker-compose exec php php artisan cache:clear
 docker-compose exec php chmod -R 777 vendor storage
 ```
-Migrate and seed database
+3. Migrate and seed database
 ```
 docker-compose exec php php artisan migrate --seed
 ```
-
-
+4. Visit http:/{ip}:8000/ or http:/localhost:8000/ . PhpMyAdmin at http:/localhost:8080 (login/pass - dev)
 
 #########################################################################################
-#																						#
-#  					1. Project structure for most important files						#
-#																						#
+#											#
+#                   1. Project structure for most important files                       #
+#                                                                                       #
 #########################################################################################
 
 ```
@@ -90,7 +89,7 @@ competition
 |
 |___resources - - Html files
 |		|___view  
-|		|___layout.blade.php		
+|		|___layout.blade.php
 |		|___home.blade.php
 |		|___simulation.blade.php
 |		|___track.blade.php
@@ -106,9 +105,9 @@ competition
 ```
 
 #########################################################################################
-#																						#
-#  						2. Dependency and  Technologies									#
-#																						#
+#			                    						#
+#                        2. Dependency and  Technologies                                #
+#                                                                                       #
 #########################################################################################
 
 * Backend
@@ -120,12 +119,15 @@ competition
 * Frontend
   *  Javsacript JQuery
   *  HTML bootstrap 4 framework
-
+  
+* Deployment
+  *  Docker
+* Other
+  *  phpMyAdmin
 
 #########################################################################################
-#																						#
-#  					3. Tracing Code Functionality										#
-#																						#
+#			                    						#
+#                            3. Tracing Code Functionality                              #                                                                                       #                                                                                       #
 #########################################################################################
 
 Contents information - exact sender and receiver coordinates, timestamp, and parcel type.
@@ -186,6 +188,7 @@ Compression length statistic
 ### Compression rate
 
 Best Case  - 56.25 %
+
 Worst Case - 22.92 %
 
 
@@ -201,17 +204,18 @@ All coordinate integer parts are paired  with letter. For example
 -9 = A, 50 = B ... In this way we code 2 charts in one letter.
 
 
-Pros - 	good compression rate
-		readable, spellable code
-		could be hashed (for privacy)
+* Pros
+  *  compression rate  
+  *  readable  
+  *  spellable code
+  *  could be hashed (for privacy)
+  
+* Cons
+  *  Alphabet is needed
+  *  or actual version only EU coordinates
+  *  not constant code size
 
-Cons - Alphabet is needed
-	 - For actual version only EU coordinates
-	 - not constant code size	
-
-###
 # Compression algorithm  explain
-###
 
 ### Compressing number
 
@@ -265,7 +269,7 @@ it means first character is the real number of type id.
 
 ## Reversing coordinate integer part
 
-** 2 Possibilities: **
+**2 Possibilities:**
 * Latitude integer part is coded in letter - 1st character  (second in tracking code)
 * Latitude integer is not coded in letter - 2nd character s (second and third in tracking code)
 
@@ -293,7 +297,6 @@ Most important part here is that we know:
 ## 3 Step
 
 After step 2, the rest part of tracking code is compressed timestamp.
-
 
 
 ### Compressing Coordinate
@@ -325,7 +328,6 @@ given modified timestamp
 
 ## Compression Limitation
 
-
 * Coordinates
   *  Europe coordinate boundary.
 
@@ -346,13 +348,13 @@ given modified timestamp
   *  3 years (then defined timestamp must be renewed or 1 digit to tracking code added)
 
 
-###############################################################################################
-#																							  #
-#  								1. Persistent and Database									  #
-#																						      #
-###############################################################################################
+########################################################################################
+#                                                                                      #
+#                              1. Persistent and Database                              #
+#				    		    		    	               #
+########################################################################################
 
-Main part of structure:
+Main DB structure:
 ```					
 ┌─────────────────────────────┐1..*    0..1┌────────────────────┐1..*     0..1┌─────────────────┐
 │   parcels                   │───────────>│ parcel_status      │────────────>│      status     │
@@ -369,16 +371,20 @@ Status Location explain
 =======================
 
 All needed information and data of Parcel could be saved om 'parcels' table.
-'status' table contents all possible statuses. located column says if current status could be located
+
+'status' table contents all possible statuses. located column says if current status could be 
+
 If yes then status desc column contents ...........[..#..]...... 
-[..#..] - if location will be not entered this part of string will be removed
+
+[..#..] - if location will be not entered this part of string will be 
+
 [..#..] - if location will be entered - square brackets will be removed and # will be replaced with location.
 
-Example:
-Status desc - Die Sendung wurde [in #] sortiert
+#### Example:
 
-Form fill with location    - Hannover: Die Sendung wurde in Hannover sortiert
-Form fill without location - Hannover: Die Sendung wurde sortiert
+*  Status desc - Die Sendung wurde [in #] sortiert
+*  Form fill with location    - Hannover: Die Sendung wurde in Hannover sortiert
+*  Form fill without location - Hannover: Die Sendung wurde sortiert
 
 Location will be saved in 'pacel_status' pivot table with creation date. For more efficient could be created
 other table 'locations' where all possible locations would be inserted and then by adding status use only
