@@ -1,8 +1,7 @@
-#########################################################################################
-#			                               					#
-#  		                        Introduction	         			#
-#											#
-#########################################################################################
+#			                               					
+# Introduction	         			
+#
+
 
 
 Hello everyone. I have implemented parcel tracking system witch holds exact sender and
@@ -19,11 +18,11 @@ lossy compress this information in tracking code.
 4. Persistent and Database
 
 
-#########################################################################################
-#								                        #
-#  	                0. Instalation shipment and deployment 				#
-#                                                                                       #
-#########################################################################################
+
+#
+# 0. Instalation shipment and deployment
+#
+
 
 1. Clone project
 ```
@@ -44,11 +43,10 @@ docker-compose exec php php artisan migrate --seed
 ```
 4. Visit http:/{ip}:8000/ or http:/localhost:8000/ . PhpMyAdmin at http:/localhost:8080 (login/pass - dev)
 
-#########################################################################################
-#											#
-#                   1. Project structure for most important files                       #
-#                                                                                       #
-#########################################################################################
+
+#
+#                   1. Project structure for most important files
+#
 
 ```
 competition
@@ -104,11 +102,11 @@ competition
 .env
 ```
 
-#########################################################################################
-#			                    						#
-#                        2. Dependency and  Technologies                                #
-#                                                                                       #
-#########################################################################################
+
+#
+#                        2. Dependency and  Technologies
+#
+
 
 * Backend
   *  PHP Laravel Framework (PHP 7, nginx PHP-FPM)
@@ -125,10 +123,10 @@ competition
 * Other
   *  phpMyAdmin
 
-#########################################################################################
-#			                    						#
-#                            3. Tracing Code Functionality                              #                                                                                       #                                                                                       #
-#########################################################################################
+
+#
+# 3. Tracing Code Functionality
+#
 
 Contents information - exact sender and receiver coordinates, timestamp, and parcel type.
 
@@ -348,11 +346,11 @@ given modified timestamp
   *  3 years (then defined timestamp must be renewed or 1 digit to tracking code added)
 
 
-########################################################################################
-#                                                                                      #
-#                              1. Persistent and Database                              #
-#				    		    		    	               #
-########################################################################################
+
+#
+# 1. Persistent and Database
+#
+
 
 Main DB structure:
 ```					
